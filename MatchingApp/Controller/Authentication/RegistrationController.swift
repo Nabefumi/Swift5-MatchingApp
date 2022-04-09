@@ -44,7 +44,7 @@ class RegistrationController: UIViewController {
                                                         attributes: [.foregroundColor: UIColor.white, .font
                                                                                      : UIFont.systemFont(ofSize: 16)])
         
-        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [.foregroundColor: UIColor.white, .font: UIFont.boldSystemFont(ofSize: 16)]))
+        attributedTitle.append(NSAttributedString(string: "Log in", attributes: [.foregroundColor: UIColor.white, .font: UIFont.boldSystemFont(ofSize: 16)]))
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.addTarget(self, action: #selector(handleShoLogin), for: .touchUpInside)
         return button

@@ -21,7 +21,7 @@ class HomeNavigationStackView: UIStackView {
     
     let settingsButton = UIButton(type: .system)
     let messageButton = UIButton(type: .system)
-    let tinderIcon = UIImageView(image: #imageLiteral(resourceName: "app_icon"))
+    let tinderIcon = UIImageView(image: #imageLiteral(resourceName: "ciccc_logo"))
     
     
     // MARK: - Lifecycle

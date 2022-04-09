@@ -71,7 +71,6 @@ class SettingsController: UITableViewController {
         
         Service.uploadImage(image: image) { imageUrl in
             self.user.imageURLs.append(imageUrl)
-            print("DEBUG: User image URLs \(self.user.imageURLs)")
             hud.dismiss()
         }
     }
