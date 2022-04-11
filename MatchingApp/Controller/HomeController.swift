@@ -38,7 +38,6 @@ class HomeController: UIViewController {
     
     //MARK: - API
     
-    
     func fetchUsers(forCurrentUser user: User) {
         Service.fetchUsers (forCurrentUser: user) { users in
             self.viewModels = users.map({ CardViewModel(user: $0)})
@@ -91,7 +90,6 @@ class HomeController: UIViewController {
         viewModels.forEach { viewModel in
             let cardView = CardView(viewModel: viewModel)
             cardView.delegate = self
-//          cardViews.append(cardView)
             deckView.addSubview(cardView)
             cardView.fillSuperview()
         }
@@ -234,8 +232,6 @@ extension HomeController: BottomControlsStackViewDelegate {
         }
 
     }
-    
-    
 }
 
 //MARK: - ProfileContrllerDelegate
@@ -268,8 +264,12 @@ extension HomeController: AuthenticationDelegate {
 }
 
 extension HomeController: MatchViewDelegate {
-    func matchview(_ view: MatchView, wantsToSendMessageTo user: User) {
-        print("Start conversation with \(user.name)")
+    func matchView(_ view: MatchView, wantsToSendMessageTo user: User) {
+        UIView.animate(withDuration: 0.5, animations: {
+            view.alpha = 0
+        }) { _ in
+            view.removeFromSuperview()
+            self.startChat(withUser: user)
+        }
     }
-    
 }

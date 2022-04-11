@@ -21,7 +21,7 @@ class LoginController: UIViewController {
     
     private let iconImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = #imageLiteral(resourceName: "app_icon").withRenderingMode(.alwaysTemplate)
+        iv.image = #imageLiteral(resourceName: "ciccc_logo").withRenderingMode(.alwaysTemplate)
         iv.tintColor = .white
         return iv
     }()
@@ -99,17 +99,17 @@ class LoginController: UIViewController {
     func checkFormStatus() {
         if viewModel.formIsValid {
             authButton.isEnabled = true
-            authButton.backgroundColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+            authButton.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1) // 20220321 change the Color
         } else {
             authButton.isEnabled = false
-            authButton.backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
+            authButton.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1) // 20220321 change the Color
         }
     }
     
     func configureUI() {
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
-        view.backgroundColor = .systemPink
+        view.backgroundColor = .systemBlue // 20220321 change the Color
         
         view.addSubview(iconImageView)
         iconImageView.centerX(inView: view)
