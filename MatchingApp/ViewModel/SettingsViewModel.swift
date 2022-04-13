@@ -18,7 +18,7 @@ enum SettingsSections: Int, CaseIterable {
         switch self {
             
         case .name: return "Name"
-        case .profession: return "Prifession"
+        case .profession: return "Course name"
         case .age: return "Age"
         case .bio: return "Bio"
         case .ageRange: return "ReturnSeeking Age Range"
