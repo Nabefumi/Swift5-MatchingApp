@@ -28,7 +28,6 @@ class KeepSwipingButton: UIButton {
         
         maskPath.addPath(UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).cgPath)
         
-         // remove middle portion of button
         maskPath.addPath(UIBezierPath(roundedRect: rect.insetBy(dx: 2, dy: 2), cornerRadius:
                                          cornerRadius).cgPath)
         

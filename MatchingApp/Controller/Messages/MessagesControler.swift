@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 private let reuseIdentifier = "MessageCell"
 
@@ -14,6 +15,9 @@ class MessagesController: UITableViewController {
     // MARK: - Properties
     
     private let user: User
+    private var conversationsDictionary = [String: Conversation]()
+    
+    private let searchController = UISearchController(searchResultsController: nil)
     
     private lazy var headerView: MatchHeader = {
         let header = MatchHeader()
@@ -42,6 +46,8 @@ class MessagesController: UITableViewController {
         configureNavigationBar()
         fetchMatches()
         fetchRecentMessages()
+        fetchConversations()
+//        configureSearchController()
     }
     
     // MARK: - Selectors
@@ -53,14 +59,36 @@ class MessagesController: UITableViewController {
     // MARK: - API
     
     func fetchRecentMessages() {
+        showLoader(true)
+        
         MessagingService.shared.fetchConversations { conversations in
+            self.showLoader(false)
             self.conversations = conversations
         }
     }
-    
+
     func fetchMatches() {
+        showLoader(true)
+        
         Service.fetchMatches { matches in
+            self.showLoader(false)
             self.headerView.matches = matches
+        }
+    }
+    
+    func fetchConversations() {
+        showLoader(true)
+        
+        MessagingService.shared.fetchConversations { conversations in
+            conversations.forEach { conversation in
+                let message = conversation.message
+                self.conversationsDictionary[message.chatPartnerId] = conversation
+            }
+            
+            self.showLoader(false)
+
+            self.conversations = Array(self.conversationsDictionary.values)
+            self.tableView.reloadData()
         }
     }
     
@@ -82,7 +110,7 @@ class MessagesController: UITableViewController {
         leftButton.layer.cornerRadius = 32 / 2
         leftButton.layer.masksToBounds = true
         leftButton.isUserInteractionEnabled = true
-        leftButton.image = #imageLiteral(resourceName: "app_icon").withRenderingMode(.alwaysTemplate)
+        leftButton.image = #imageLiteral(resourceName: "ciccc_logo").withRenderingMode(.alwaysTemplate)
         leftButton.tintColor = .lightGray
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleDismissal))
@@ -94,6 +122,12 @@ class MessagesController: UITableViewController {
         icon.tintColor = .systemPink
         navigationItem.titleView = icon
     }
+    
+//    func configureSearchController() {
+//        searchController.searchBar.showsCancelButton = false
+//        navigationItem.searchController = searchController
+//        searchController.obscuresBackgroundDuringPresentation = false
+//    }
 }
 
 // MARK: - UITableViewDataSource
@@ -121,7 +155,7 @@ extension MessagesController {
         let view = UIView()
         
         let label = UILabel()
-        label.textColor = #colorLiteral(red: 0.9826375842, green: 0.3476698399, blue: 0.447683692, alpha: 1)
+        label.textColor = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
         label.text = "Messages"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         

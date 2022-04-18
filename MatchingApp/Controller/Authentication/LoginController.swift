@@ -79,12 +79,16 @@ class LoginController: UIViewController {
         
         AuthService.logUserIn(withEmail: email, password: password) { (result, error) in
             if let error = error {
-                print("DEBUG: \(error.localizedDescription)")
+
+                self.showLoader(false)
+                self.showError(error.localizedDescription)
                 hud.dismiss()
+                
                 return
             }
-            hud.dismiss()
+            self.showLoader(false)
             self.delegate?.authenticationComplete()
+            hud.dismiss()
         }
     }
     
@@ -99,10 +103,10 @@ class LoginController: UIViewController {
     func checkFormStatus() {
         if viewModel.formIsValid {
             authButton.isEnabled = true
-            authButton.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1) // 20220321 change the Color
+            authButton.backgroundColor = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1) // 20220321 change the Color
         } else {
             authButton.isEnabled = false
-            authButton.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1) // 20220321 change the Color
+            authButton.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1) // 20220321 change the Color
         }
     }
     

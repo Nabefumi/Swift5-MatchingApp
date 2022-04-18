@@ -8,46 +8,57 @@
 import UIKit
 import SDWebImage
 
-protocol SettingsHeaderDelegate: class {
-    func settingsHeader(_ header: SettingsHeader, didSelect index: Int)
+protocol SettingsHeaderDelegate: AnyObject {
+    func settingsHeader(_ settingsHeader: SettingsHeader, didSelect index: Int)
 }
 
 class SettingsHeader: UIView {
     
-    //MARK: - Properties
-    private let user: User
+    // MARK: - Properties
+    
+    let user: User
+    var buttons: [UIButton] = []
     weak var delegate: SettingsHeaderDelegate?
     
-    //lazy property because we are trying to use the function outside of the initializer
-    var buttons = [UIButton]()
-
-    
-    //MARK: - Lifecycle
+    // MARK: - Initalizers
     
     init(user: User) {
         self.user = user
         super.init(frame: .zero)
+        //translatesAutoresizingMaskIntoConstraints = false
+        
         backgroundColor = .systemGroupedBackground
         
         let button1 = createButton(0)
         let button2 = createButton(1)
         let button3 = createButton(2)
+        
         buttons.append(button1)
         buttons.append(button2)
         buttons.append(button3)
         
         addSubview(button1)
-        button1.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, paddingTop: 16, paddingLeft: 16, paddingBottom: 16)
-        button1.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.45).isActive = true
         
-        let stack = UIStackView(arrangedSubviews: [button2, button3])
-        stack.axis = .vertical
-        stack.distribution = .fillEqually
-        stack.spacing = 16
+        NSLayoutConstraint.activate([
+            button1.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            button1.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            button1.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+            button1.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.45)
+        ])
         
-        addSubview(stack)
+        let stackView = UIStackView(arrangedSubviews: [button2, button3])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.spacing = 16
+        addSubview(stackView)
         
-        stack.anchor(top: topAnchor, left: button1.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+            stackView.leadingAnchor.constraint(equalTo: button1.trailingAnchor, constant: 16),
+            stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -16)
+        ])
         
         loadUserPhotos()
     }
@@ -56,32 +67,36 @@ class SettingsHeader: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - Selectors
+    // MARK: - Helpers
     
-    @objc func handleSelectPhoto(sender: UIButton) {
-        delegate?.settingsHeader(self, didSelect: sender.tag)
+    func createButton(_ index: Int) -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Select photo", for: .normal)
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
+        button.backgroundColor = .white
+        button.addTarget(self, action: #selector(handleSelectPhoto), for: .touchUpInside)
+        button.imageView?.contentMode = .scaleAspectFill
+        button.tag = index
+        
+        return button
     }
     
-    //MARK: - Helpers
-    
-    func loadUserPhotos() {
+    func loadUserPhotos(){
         let imageURLs = user.imageURLs.map({ URL(string: $0) })
+        
         for (index, url) in imageURLs.enumerated() {
-            SDWebImageManager.shared().loadImage(with: url, options: .continueInBackground, progress: nil) { (image, _, _, _, _, _) in
+//            SDWebImageManager.shared().load
+            SDWebImageManager.shared().loadImage(with: url, options: .continueInBackground, progress: nil) { image, _, _, _, _, _ in
                 self.buttons[index].setImage(image?.withRenderingMode(.alwaysOriginal), for: .normal)
             }
         }
     }
     
-    func createButton(_ index: Int) -> UIButton {
-        let button = UIButton(type: .system)
-        button.setTitle("Select Photo", for: .normal)
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(handleSelectPhoto), for: .touchUpInside)
-        button.clipsToBounds = true
-        button.backgroundColor = .white
-        button.imageView?.contentMode = .scaleAspectFill
-        button.tag = index
-        return button
+    // MARK: - Handlers
+    
+    @objc func handleSelectPhoto(button: UIButton){
+        delegate?.settingsHeader(self, didSelect: button.tag)
     }
 }
